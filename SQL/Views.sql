@@ -32,7 +32,7 @@ CREATE OR REPLACE VIEW v_percentage_grow AS
     ORDER BY current_year.year_sale;
 
 
-CREATE VIEW v_product_sales AS
+CREATE OR REPLACE VIEW v_product_sales AS
     SELECT
         c.name                AS category_name,
         SUM(op.nmb)           AS nmb_salles,
@@ -49,3 +49,18 @@ CREATE VIEW v_product_sales AS
     GROUP BY c.name,
              p.product_name
     ORDER BY total_price DESC;
+
+
+CREATE OR REPLACE VIEW v_sales_period AS
+    SELECT
+        YEAR(o.date) AS year_sale,
+        MONTH(o.date) AS month_sale,
+        SUM(op.nmb) AS nmb_of_products
+    FROM orders o
+    JOIN order_product op ON o.order_id = op.order_id
+    WHERE o.processed = 1
+    GROUP BY YEAR(o.date),
+             MONTH(o.date)
+    ORDER BY YEAR(o.date),
+             MONTH(o.date);
+
