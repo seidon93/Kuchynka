@@ -64,3 +64,19 @@ CREATE OR REPLACE VIEW v_sales_period AS
     ORDER BY YEAR(o.date),
              MONTH(o.date);
 
+
+CREATE OR REPLACE VIEW v_customers AS
+    SELECT
+        adr.*,
+        CASE cus.sex
+            WHEN 'M' THEN 'Muž'
+            WHEN 'F' THEN 'Žena'
+            ELSE 'Ostatní'
+        END AS sex,
+        crat.rating,
+        branch.city AS "Branch city"
+    FROM address adr
+    JOIN customers cus ON cus.ID = adr.ID
+    JOIN customer_rating crat ON cus.ID = crat.Customer_ID
+    JOIN branch ON crat.Branch_ID = branch.Branch_ID;
+
